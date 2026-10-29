@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>여행 중국어 말하기 연습</title>
+<style>
+:root{--bg:#fffdf7;--card:#fff;--ink:#2b2b2b;--sub:#6b6b6b;--red:#d9362b;--blue:#2a7de1;--soft:#fff1cf;--line:#e2dccb;--hi:#fff7d6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1b17;--card:#2a2722;--ink:#f1ede4;--sub:#b9b2a2;--soft:#3a3322;--line:#413c32;--hi:#3d3720}}
+:root[data-theme="dark"]{--bg:#1d1b17;--card:#2a2722;--ink:#f1ede4;--sub:#b9b2a2;--soft:#3a3322;--line:#413c32;--hi:#3d3720}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;line-height:1.4}
+.wrap{max-width:720px;margin:0 auto;padding:14px 14px 90px}
+h1{font-size:22px;margin:4px 0;color:var(--red)}.sub{color:var(--sub);font-size:13px}
+.tabs,.roles{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.tab,.chip{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.tab.on{background:var(--red);border-color:var(--red);color:#fff}.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.go{width:100%;background:linear-gradient(90deg,#ff7a45,var(--red));color:#fff;border:0;border-radius:16px;padding:13px;font-size:17px;font-weight:700;cursor:pointer;margin:6px 0 10px;font-family:inherit}
+.go.stop{background:#555}
+.card{display:flex;gap:10px;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px 12px;margin:9px 0;transition:.2s}
+.card.hi{background:var(--hi);border-color:var(--red);transform:scale(1.015)}.card.dim{opacity:.72}
+.who{flex:0 0 28px;height:28px;border-radius:50%;color:#fff;font-weight:700;display:grid;place-items:center;font-size:14px}.who.A{background:var(--blue)}.who.B{background:var(--red)}
+.dok{font-size:21px;font-weight:700}.py{font-size:12px;color:var(--blue)}.ko{font-size:12.5px;color:var(--sub)}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center}
+.b{border:0;border-radius:12px;padding:7px 11px;font-size:13.5px;font-weight:700;cursor:pointer;background:var(--soft);color:var(--ink);font-family:inherit}
+.b.rec{background:var(--red);color:#fff}.b.rec.live{animation:p 1s infinite}.b[disabled]{opacity:.35;cursor:default}
+@keyframes p{50%{box-shadow:0 0 0 7px #d9362b44}}
+.stars button{background:none;border:0;font-size:20px;cursor:pointer;padding:0 1px;color:#ccc}.stars button.on{color:#f4b400}
+.msg{background:var(--soft);border-radius:12px;padding:8px 12px;font-size:13px;margin:8px 0;display:none}
+.how{background:var(--card);border:2px dashed var(--line);border-radius:14px;padding:8px 14px;font-size:13px;margin:8px 0}.how ol{margin:4px 0;padding-left:18px}
+.done{text-align:center;padding:14px;font-size:18px;font-weight:700;display:none;background:var(--soft);border-radius:16px;margin:10px 0}
+</style></head><body>
+<div class="wrap">
+<h1>🎤 여행 중국어 말하기 연습</h1>
+<div class="sub">듣고 → 따라 말하고 → 녹음해서 내 목소리를 들어봐요!</div>
+<div class="how"><b>사용법</b><ol><li>🔊 선생님 소리를 먼저 들어요 (🐢는 천천히)</li><li>🎤 눌러서 말하고, 끝나면 ⏹ 를 눌러요</li><li>▶ 내 목소리, 🔁 선생님과 비교해서 들어요</li><li>⭐로 스스로 점수를 줘요</li></ol></div>
+<div class="msg" id="msg"></div>
+<div class="tabs" id="tabs"></div>
+<div class="roles" id="roles"></div>
+<button class="go" id="go"></button>
+<div id="list"></div>
+<div class="done" id="done">🎉 잘했어요! 이제 🎧 대화 전체 듣기로 확인해요</div>
+<button class="go" id="all" style="background:linear-gradient(90deg,#4a90e2,#2a5fc4)">🎧 우리 대화 전체 듣기</button>
+<div class="sub">※ 녹음은 이 화면에만 임시로 저장돼요. 페이지를 닫거나 새로고침하면 사라져요.</div>
+</div>
+<script>
+/* 한자(zh)는 중국어 음성 재생에만 쓰고 화면에는 보여주지 않아요 */
+var S=[
+{t:"🛂 상황 1 · 입국심사",L:[
+["A","你好！请出示护照。","Nǐ hǎo! Qǐng chūshì hùzhào.","니 하오! 칭 추스 후자오.","안녕하세요! 여권을 보여주세요."],
+["B","好的，给您。","Hǎo de, gěi nín.","하오 더, 게이 닌.","네, 여기 있습니다."],
+["A","你是哪国人？","Nǐ shì nǎ guó rén?","니 스 나 궈 런?","어느 나라 사람이에요?"],
+["B","我是韩国人。","Wǒ shì Hánguó rén.","워 스 한궈 런.","저는 한국 사람이에요."],
+["A","你来中国做什么？","Nǐ lái Zhōngguó zuò shénme?","니 라이 쭝궈 쭈오 선머?","중국에 무엇을 하러 왔나요?"],
+["B","我来旅游。","Wǒ lái lǚyóu.","워 라이 뤼요우.","여행하러 왔어요."],
+["A","你打算待几天？","Nǐ dǎsuàn dāi jǐ tiān?","니 다쏸 다이 지 티엔?","며칠 머무를 예정인가요?"],
+["B","我打算待五天。","Wǒ dǎsuàn dāi wǔ tiān.","워 다쏸 다이 우 티엔.","5일 동안 머무를 예정이에요."],
+["A","好的，欢迎来中国！","Hǎo de, huānyíng lái Zhōngguó!","하오 더, 환잉 라이 쭝궈!","좋습니다. 중국에 오신 것을 환영합니다!"],
+["B","谢谢！","Xièxie!","시에시에!","감사합니다!"]]},
+{t:"🎫 상황 2 · 입장권 사기",L:[
+["A","你好！我想买门票。","Nǐ hǎo! Wǒ xiǎng mǎi ménpiào.","니 하오! 워 시앙 마이 먼피아오.","안녕하세요! 입장권을 사고 싶어요."],
+["B","你好！你要几张？","Nǐ hǎo! Nǐ yào jǐ zhāng?","니 하오! 니 야오 지 장?","안녕하세요! 몇 장 필요하세요?"],
+["A","我要两张。","Wǒ yào liǎng zhāng.","워 야오 량 장.","두 장 주세요."],
+["B","好的。","Hǎo de.","하오 더.","네, 알겠습니다."],
+["A","一张多少钱？","Yì zhāng duōshao qián?","이 장 뚜오샤오 치엔?","한 장에 얼마예요?"],
+["B","一张三十块。","Yì zhāng sānshí kuài.","이 장 싼스 콰이.","한 장에 30위안입니다."],
+["A","一共多少钱？","Yígòng duōshao qián?","이꿍 뚜오샤오 치엔?","모두 얼마예요?"],
+["B","一共六十块。","Yígòng liùshí kuài.","이꿍 리우스 콰이.","모두 60위안입니다."],
+["A","好的，给您。","Hǎo de, gěi nín.","하오 더, 게이 닌.","네, 여기 있습니다."],
+["B","谢谢，祝你玩得开心！","Xièxie, zhù nǐ wán de kāixīn!","시에시에, 쭈 니 완 더 카이신!","감사합니다. 즐거운 시간 보내세요!"]]}];
+var sit=0,role='ALL',hi=-1,run=0,rec={},stars={},cur=null,stream=null;
+var $=function(i){return document.getElementById(i)};
+function msg(t){var m=$('msg');m.textContent=t;m.style.display=t?'block':'none'}
+function key(i){return sit+'-'+i}
+function mine(i){return role==='ALL'||S[sit].L[i][0]===role}
+/* 음성 */
+function speak(t,r){return new Promise(function(ok){try{var s=window.speechSynthesis;s.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';u.rate=r||.85;var v=s.getVoices().filter(function(x){return x.lang.replace('_','-').toLowerCase().indexOf('zh')==0})[0];if(v)u.voice=v;u.onend=u.onerror=ok;s.speak(u)}catch(e){msg('이 기기는 소리 듣기를 지원하지 않아요.');ok()}})}
+var cA=null;function play(url){return new Promise(function(ok){if(cA)cA.pause();cA=new Audio(url);cA.onended=cA.onerror=ok;cA.play().catch(ok)})}
+/* 녹음 */
+function getStream(){if(stream)return Promise.resolve(stream);if(!navigator.mediaDevices||!window.MediaRecorder){msg('이 브라우저에서는 녹음을 쓸 수 없어요. 크롬/사파리 최신 버전을 사용해 주세요.');return Promise.reject()}
+return navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){stream=s;msg('');return s},function(){msg('마이크 사용이 막혀 있어요. 주소창의 마이크 허용을 눌러 주세요. (미리보기 화면에서는 막힐 수 있어요)');throw 0})}
+function startRec(i){return getStream().then(function(s){stopRec();var ch=[],mr=new MediaRecorder(s),k=key(i);return new Promise(function(ok){cur={k:k,mr:mr,i:i,ok:ok,t:setTimeout(stopRec,20000)};mr.ondataavailable=function(e){ch.push(e.data)};mr.onstop=function(){clearTimeout(cur&&cur.t);rec[k]=URL.createObjectURL(new Blob(ch,{type:mr.mimeType||'audio/webm'}));var o=cur&&cur.ok;cur=null;render();if(o)o()};mr.start();render()})}).catch(function(){})}
+function stopRec(){if(cur&&cur.mr.state!=='inactive')cur.mr.stop()}
+/* 역할극 */
+function say(i,r){return speak(S[sit].L[i][1],r)}
+function runPlay(){if(run){run=0;try{speechSynthesis.cancel()}catch(e){}stopRec();hi=-1;render();return}
+run=++runId;var id=run,L=S[sit].L;$('done').style.display='none';
+(async function(){for(var i=0;i<L.length;i++){if(run!==id)return;hi=i;render();document.getElementById('c'+i).scrollIntoView({block:'center',behavior:'smooth'});
+if(role!=='ALL'&&!mine(i)){await say(i)}else if(role==='ALL'){await say(i);if(run!==id)return;await startRec(i)}else{await startRec(i)}}
+run=0;hi=-1;render();$('done').style.display='block'})()}
+var runId=0;
+async function playAll(){var L=S[sit].L;run=0;for(var i=0;i<L.length;i++){hi=i;render();if(rec[key(i)])await play(rec[key(i)]);else await say(i)}hi=-1;render()}
+/* 화면 */
+function render(){
+$('tabs').innerHTML=S.map(function(s,i){return '<button class="tab'+(i==sit?' on':'')+'" data-a="tab" data-i="'+i+'">'+s.t+'</button>'}).join('');
+$('roles').innerHTML=[['ALL','🗣 따라 말하기(전체)'],['A','나는 A'],['B','나는 B']].map(function(r){return '<button class="chip'+(role==r[0]?' on':'')+'" data-a="role" data-i="'+r[0]+'">'+r[1]+'</button>'}).join('');
+$('go').className='go'+(run?' stop':'');$('go').textContent=run?'⏹ 중단하기':(role==='ALL'?'▶ 한 줄씩 듣고 따라 말하기 시작':'▶ 역할극 시작 (짝 역할은 소리로 나와요)');
+$('list').innerHTML=S[sit].L.map(function(l,i){var m=mine(i),k=key(i),live=cur&&cur.k===k,st='';
+for(var s=1;s<=3;s++)st+='<button class="'+((stars[k]||0)>=s?'on':'')+'" data-a="star" data-i="'+i+'" data-s="'+s+'">★</button>';
+var b='<button class="b" data-a="say" data-i="'+i+'">🔊 듣기</button>';
+if(m)b+='<button class="b" data-a="slow" data-i="'+i+'">🐢 천천히</button><button class="b rec'+(live?' live':'')+'" data-a="rec" data-i="'+i+'">'+(live?'⏹ 끝!':'🎤 녹음')+'</button><button class="b" data-a="mine" data-i="'+i+'"'+(rec[k]?'':' disabled')+'>▶ 내 목소리</button><button class="b" data-a="cmp" data-i="'+i+'"'+(rec[k]?'':' disabled')+'>🔁 비교</button><span class="stars">'+st+'</span>';
+return '<div class="card'+(i==hi?' hi':'')+(m?'':' dim')+'" id="c'+i+'"><div class="who '+l[0]+'">'+l[0]+'</div><div><div class="dok">'+l[2]+'</div><div class="py">'+l[3]+'</div><div class="ko">'+l[4]+'</div><div class="btns">'+b+'</div></div></div>'}).join('')}
+document.addEventListener('click',function(e){var t=e.target.closest('[data-a]');if(!t||t.disabled)return;var a=t.dataset.a,i=t.dataset.i,n=+i;
+if(a=='tab'){run=0;stopRec();sit=n;hi=-1;$('done').style.display='none';render()}
+else if(a=='role'){run=0;stopRec();role=i;hi=-1;render()}
+else if(a=='say')say(n);else if(a=='slow')say(n,.5);
+else if(a=='rec'){if(cur&&cur.k===key(n))stopRec();else startRec(n)}
+else if(a=='mine')play(rec[key(n)]);
+else if(a=='cmp')say(n).then(function(){return play(rec[key(n)])});
+else if(a=='star'){stars[key(n)]=+t.dataset.s;render()}});
+$('go').onclick=runPlay;$('all').onclick=playAll;
+try{if(window.speechSynthesis){speechSynthesis.getVoices();setTimeout(function(){var v=speechSynthesis.getVoices();if(v.length&&!v.some(function(x){return x.lang.toLowerCase().indexOf('zh')>=0}))msg('이 기기에 중국어 음성이 없어서 소리가 어색할 수 있어요. (설정 > 음성/언어에서 중국어 추가)')},1200)}}catch(e){}
+render();
+</script></body></html>
