@@ -46,10 +46,10 @@ button:focus-visible{outline:3px solid var(--fg);outline-offset:3px}
 <body>
 <main>
 <h1>뭘 살까? 랜덤 뽑기</h1>
-<p class="sub">뽑기를 누르면 살 물건, 색깔, 크기가 정해져요. 빈칸（　）에는 알맞은 양사를 직접 넣어서 짝과 대화를 이어 가세요.</p>
+<p class="sub">뽑기를 누르면 살 물건, 색깔(또는 수량), 크기가 정해져요. 빈칸（　）에는 알맞은 양사를 직접 넣어서 짝과 대화를 이어 가세요.</p>
 <div class="grid" id="cards">
   <div class="card"><span class="label">살 물건</span><div class="pic" id="pic" role="img" aria-label="살 물건 그림"></div><div class="zh" id="itemZh">鞋</div><div class="py" id="itemPy">xié</div><div class="ko" id="itemKo">신발</div></div>
-  <div class="card"><span class="label">색깔</span><div class="swatch" id="sw"></div><div class="zh" id="colZh">白色</div><div class="py" id="colPy">báisè</div><div class="ko" id="colKo">흰색</div></div>
+  <div class="card"><span class="label" id="colLabel">색깔</span><div class="swatch" id="sw"></div><div class="zh" id="colZh">白色</div><div class="py" id="colPy">báisè</div><div class="ko" id="colKo">흰색</div></div>
 </div>
 <div class="card size" style="min-height:0;flex-direction:row" id="sizeCard"><span class="label">요청할 크기</span><span class="zh" id="szZh">大</span><span class="py" id="szPy">dà</span><span class="ko" id="szKo">큰 것</span></div>
 <div class="sent"><span class="label">이 단어로 첫 문장 만들기</span><div class="zh" id="s1">我要买一（　）白色的鞋。</div></div>
@@ -68,16 +68,16 @@ button:focus-visible{outline:3px solid var(--fg);outline-offset:3px}
 <script>
 var items=[
 {zh:"衣服",py:"yīfu",ko:"옷"},
-{zh:"苹果",py:"píngguǒ",ko:"사과"},
+{zh:"苹果",py:"píngguǒ",ko:"사과",q:1},
 {zh:"书",py:"shū",ko:"책"},
 {zh:"裤子",py:"kùzi",ko:"바지"},
-{zh:"电影票",py:"diànyǐngpiào",ko:"영화표"},
+{zh:"电影票",py:"diànyǐngpiào",ko:"영화표",q:1},
 {zh:"铅笔",py:"qiānbǐ",ko:"연필"},
 {zh:"自行车",py:"zìxíngchē",ko:"자전거"},
-{zh:"可乐",py:"kělè",ko:"콜라"},
+{zh:"可乐",py:"kělè",ko:"콜라",q:1},
 {zh:"鞋",py:"xié",ko:"신발"},
 {zh:"花",py:"huā",ko:"꽃"},
-{zh:"电脑",py:"diànnǎo",ko:"컴퓨터"},
+{zh:"电脑",py:"diànnǎo",ko:"컴퓨터",q:1},
 {zh:"伞",py:"sǎn",ko:"우산"}];
 var colors=[
 {zh:"白色",py:"báisè",ko:"흰색",hex:"#ffffff"},
@@ -98,13 +98,16 @@ function drawPic(zh,hex){
 function $(id){return document.getElementById(id)}
 function pick(a){return a[Math.floor(Math.random()*a.length)]}
 function show(it,co,sz){
+  var n=2+Math.floor(Math.random()*8),q1=it.q?n:"一",cw=it.q?"":co.zh+"的";
   $("itemZh").textContent=it.zh;$("itemPy").textContent=it.py;$("itemKo").textContent=it.ko;
-  $("colZh").textContent=co.zh;$("colPy").textContent=co.py;$("colKo").textContent=co.ko;
+  $("colLabel").textContent=it.q?"수량":"색깔";
+  $("sw").style.display=it.q?"none":"block";
+  $("colZh").textContent=it.q?n:co.zh;$("colPy").textContent=it.q?"":co.py;$("colKo").textContent=it.q?"":co.ko;
   $("sw").style.background=co.hex;
-  drawPic(it.zh,co.hex);
+  drawPic(it.zh,it.q?"":co.hex);
   $("szZh").textContent=sz.zh;$("szPy").textContent=sz.py;$("szKo").textContent=sz.ko;
-  $("s1").textContent="我要买一（　）"+co.zh+"的"+it.zh+"。";
-  $("script").innerHTML="<p><b>태양</b> 我要买一（　）"+it.zh+"。</p><p><b>점원</b> 这（　）"+co.zh+"的怎么样？</p><p><b>태양</b> 还行。有没有"+sz.zh+"一点儿的？</p><p><b>점원</b> 有，请等一下。</p>";
+  $("s1").textContent="我要买"+q1+"（　）"+cw+it.zh+"。";
+  $("script").innerHTML="<p><b>태양</b> 我要买"+q1+"（　）"+it.zh+"。</p><p><b>점원</b> 这（　）"+cw+"怎么样？</p><p><b>태양</b> 还行。有没有"+sz.zh+"一点儿的？</p><p><b>점원</b> 有，请等一下。</p>";
 }
 var busy=false;
 function draw(){
