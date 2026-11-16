@@ -26,11 +26,9 @@ h1{font-size:28px;margin:0 0 4px}
 .py{color:var(--muted)}
 .pic{width:120px;height:120px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:72px;line-height:1;align-self:flex-start;transition:background .15s}
 .swatch{height:96px;border-radius:12px;border:2px solid var(--line);margin-bottom:8px;transition:background .15s}
-.hide .py,.hide .ko{visibility:hidden}
+.hide .py:not(.keep),.hide .ko{visibility:hidden}
 .size{margin-top:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .size .zh{font-size:44px}
-.sent{margin-top:16px;border-radius:20px;background:var(--card);border:2px solid var(--line);padding:22px 24px}
-.sent .zh{font-size:40px}
 .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
 button{font:inherit;font-weight:700;font-size:22px;border-radius:14px;padding:14px 28px;border:2px solid var(--accent);cursor:pointer}
 button:focus-visible{outline:3px solid var(--fg);outline-offset:3px}
@@ -46,13 +44,12 @@ button:focus-visible{outline:3px solid var(--fg);outline-offset:3px}
 <body>
 <main>
 <h1>뭘 살까? 랜덤 뽑기</h1>
-<p class="sub">뽑기를 누르면 살 물건, 색깔(또는 수량), 크기가 정해져요. 빈칸（　）에는 알맞은 양사를 직접 넣어서 짝과 대화를 이어 가세요.</p>
+<p class="sub">뽑기를 누르면 살 물건, 색깔, 크기가 정해져요. 알맞은 양사를 넣어서 짝과 대화를 이어 가세요.</p>
 <div class="grid" id="cards">
-  <div class="card"><span class="label">살 물건</span><div class="pic" id="pic" role="img" aria-label="살 물건 그림"></div><div class="zh" id="itemZh">鞋</div><div class="py" id="itemPy">xié</div><div class="ko" id="itemKo">신발</div></div>
+  <div class="card"><span class="label">살 물건</span><div class="pic" id="pic" role="img" aria-label="살 물건 그림"></div><div class="zh" id="itemZh">鞋</div><div class="py keep" id="itemPy">xié</div><div class="ko" id="itemKo">신발</div></div>
   <div class="card"><span class="label" id="colLabel">색깔</span><div class="swatch" id="sw"></div><div class="zh" id="colZh">白色</div><div class="py" id="colPy">báisè</div><div class="ko" id="colKo">흰색</div></div>
 </div>
 <div class="card size" style="min-height:0;flex-direction:row" id="sizeCard"><span class="label">요청할 크기</span><span class="zh" id="szZh">大</span><span class="py" id="szPy">dà</span><span class="ko" id="szKo">큰 것</span></div>
-<div class="sent"><span class="label">이 단어로 첫 문장 만들기</span><div class="zh" id="s1">我要买一（　）白色的鞋。</div></div>
 <div class="row">
   <button class="go" id="draw">뽑기</button>
   <button class="alt" id="hideBtn" aria-pressed="false">병음·뜻 숨기기</button>
@@ -68,17 +65,14 @@ button:focus-visible{outline:3px solid var(--fg);outline-offset:3px}
 <script>
 var items=[
 {zh:"衣服",py:"yīfu",ko:"옷"},
-{zh:"苹果",py:"píngguǒ",ko:"사과",q:1},
-{zh:"书",py:"shū",ko:"책"},
 {zh:"裤子",py:"kùzi",ko:"바지"},
-{zh:"电影票",py:"diànyǐngpiào",ko:"영화표",q:1},
 {zh:"铅笔",py:"qiānbǐ",ko:"연필"},
-{zh:"自行车",py:"zìxíngchē",ko:"자전거"},
-{zh:"可乐",py:"kělè",ko:"콜라",q:1},
 {zh:"鞋",py:"xié",ko:"신발"},
 {zh:"花",py:"huā",ko:"꽃"},
-{zh:"电脑",py:"diànnǎo",ko:"컴퓨터",q:1},
-{zh:"伞",py:"sǎn",ko:"우산"}];
+{zh:"伞",py:"sǎn",ko:"우산"},
+{zh:"大衣",py:"dàyī",ko:"코트"},
+{zh:"运动鞋",py:"yùndòngxié",ko:"운동화"},
+{zh:"袜子",py:"wàzi",ko:"양말"}];
 var colors=[
 {zh:"白色",py:"báisè",ko:"흰색",hex:"#ffffff"},
 {zh:"黑色",py:"hēisè",ko:"검은색",hex:"#1a1a1a"},
@@ -89,7 +83,7 @@ var colors=[
 {zh:"粉色",py:"fěnsè",ko:"분홍색",hex:"#f783ac"},
 {zh:"灰色",py:"huīsè",ko:"회색",hex:"#868e96"}];
 var sizes=[{zh:"大",py:"dà",ko:"큰 것"},{zh:"小",py:"xiǎo",ko:"작은 것"}];
-var emo={"衣服":"👕","苹果":"🍎","书":"📖","裤子":"👖","电影票":"🎟️","铅笔":"✏️","自行车":"🚲","可乐":"🥤","鞋":"👟","花":"🌸","电脑":"💻","伞":"☂️"};
+var emo={"衣服":"👕","裤子":"👖","铅笔":"✏️","鞋":"👟","花":"🌸","伞":"☂️","大衣":"🧥","运动鞋":"👟","袜子":"🧦"};
 function drawPic(zh,hex){
   var p=$("pic");
   p.textContent=emo[zh]||"";
@@ -106,8 +100,7 @@ function show(it,co,sz){
   $("sw").style.background=co.hex;
   drawPic(it.zh,it.q?"":co.hex);
   $("szZh").textContent=sz.zh;$("szPy").textContent=sz.py;$("szKo").textContent=sz.ko;
-  $("s1").textContent="我要买"+q1+"（　）"+cw+it.zh+"。";
-  $("script").innerHTML="<p><b>태양</b> 我要买"+q1+"（　）"+it.zh+"。</p><p><b>점원</b> 这（　）"+cw+"怎么样？</p><p><b>태양</b> 还行。有没有"+sz.zh+"一点儿的？</p><p><b>점원</b> 有，请等一下。</p>";
+    $("script").innerHTML="<p><b>태양</b> 我要买"+q1+"（　）"+it.zh+"。</p><p><b>점원</b> 这（　）"+cw+"怎么样？</p><p><b>태양</b> 还行。有没有"+sz.zh+"一点儿的？</p><p><b>점원</b> 有，请等一下。</p>";
 }
 var busy=false;
 function draw(){
